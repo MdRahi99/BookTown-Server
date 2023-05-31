@@ -22,14 +22,14 @@ async function run() {
   try {
     const booksCategory = client.db('BookTown').collection('BooksCategory');
 
-    app.get('/booksCategory', async(req, res) => {
+    app.get('/books-category', async(req, res) => {
         const query = {};
         const cursor = booksCategory.find(query);
         const category = await cursor.toArray();
         res.send(category);
     });
 
-    app.get('/booksCategory/:id', async(req, res) => {
+    app.get('/books-category/:id', async(req, res) => {
       const id = req.params.id;
       const query = { '_id': new ObjectId(id) };
       const categoryDetails = await booksCategory.findOne(query);
