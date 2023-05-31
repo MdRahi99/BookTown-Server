@@ -31,7 +31,7 @@ async function run() {
 
     app.get('/books-category/:id', async(req, res) => {
       const id = req.params.id;
-      const query = { '_id': new ObjectId(id) };
+      const query = { _id: new ObjectId(id) };
       const categoryDetails = await booksCategory.findOne(query);
       res.send(categoryDetails);
     });
