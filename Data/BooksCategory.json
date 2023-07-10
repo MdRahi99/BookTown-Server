@@ -1,18 +1,18 @@
 [
     {
-        "name": "History",
-        "img": "https://i.ibb.co/TkCgQDS/history.jpg"
+        "category": "History",
+        "img": "./Images/history.jpg"
     },
     {
-        "name": "Science & Mathematics",
-        "img": "https://i.ibb.co/d5JvGXp/science.jpg"
+        "category": "Science & Mathematics",
+        "img": "./Images/science.jpg"
     },
     {
-        "name": "Psychology & Sociology",
-        "img": "https://i.ibb.co/YBwZL74/Psychology.jpg"
+        "category": "Psychology & Sociology",
+        "img": "./Images/Psychology.jpg"
     },
     {
-        "name": "Politics & Economics",
-        "img": "https://i.ibb.co/PcM7HCB/Politics-Economics.jpg"
+        "category": "Politics & Economics",
+        "img": "./Images/Politics & Economics.jpg"
     }
 ]

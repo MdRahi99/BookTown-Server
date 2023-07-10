@@ -1,0 +1,99 @@
+[
+    {
+        "name": "Arabs",
+        "category": "History",
+        "img": "https://m.media-amazon.com/images/I/61J2BK3QzAL._SL500_.jpg",
+        "author": "Tim Mackintosh-Smith",
+        "rating": "4.24",
+        "price": "20"
+    },
+    {
+        "name": "The Ottomans",
+        "category": "History",
+        "img": "https://m.media-amazon.com/images/I/51gUvqEr1kS._SL500_.jpg",
+        "author": "Marc David Baer",
+        "rating": "4.23",
+        "price": "22"
+    },
+    {
+        "name": "The Republic of Arabic Letters",
+        "category": "History",
+        "img": "https://m.media-amazon.com/images/I/61ZnGbaX7cL._SL500_.jpg",
+        "author": "Alexander Bevilacqua",
+        "rating": "4.24",
+        "price": "24"
+    },
+    {
+        "name": "Thinking, Fast and Slow",
+        "category": "Science & Mathematics",
+        "img": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN=B00555X8OA&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL320_&tag=allencheng-20",
+        "author": "Daniel Kahneman",
+        "rating": "4.67",
+        "price": "21"
+    },
+    {
+        "name": "The Power of Habit",
+        "category": "Science & Mathematics",
+        "img": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN=B0055PGUYU&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL320_&tag=allencheng-20",
+        "author": "Charles Duhigg",
+        "rating": "4.25",
+        "price": "22"
+    },
+    {
+        "name": "Thing Explainer",
+        "category": "Science & Mathematics",
+        "img": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN=1473637317&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL320_&tag=allencheng-20",
+        "author": "Randall Munroe",
+        "rating": "4.03",
+        "price": "21"
+    },
+    {
+        "name": "Outliers",
+        "category": "Psychology & Sociology",
+        "img": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1344266315i/3228917.jpg",
+        "author": "Malcolm Gladwell",
+        "rating": "4.19",
+        "price": "20"
+    },
+    {
+        "name": "Mindset",
+        "category": "Psychology & Sociology",
+        "img": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1436227012i/40745.jpg",
+        "author": "Carol S. Dweck",
+        "rating": "4.09",
+        "price": "23"
+    },
+    {
+        "name": "Atomic Habits",
+        "category": "Psychology & Sociology",
+        "img": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1655988385i/40121378.jpg",
+        "author": "James Clear",
+        "rating": "4.38",
+        "price": "23"
+    },
+    {
+        "name": "Poor Economics",
+        "category": "Politics & Economics",
+        "img": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1344679036i/10245602.jpg",
+        "author": "Abhijit V. Banerjee, Esther Duflo",
+        "rating": "4.28",
+        "price": "24"
+    },
+    {
+        "name": "Why Nations Fail",
+        "category": "Politics & Economics",
+        "img": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1348987396i/12158480.jpg",
+        "author": "Daron Acemoğlu, James A. Robinson",
+        "rating": "4.08",
+        "price": "21"
+    },
+    {
+        "name": "Principles of Economics",
+        "category": "Politics & Economics",
+        "img": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1387708462i/1753460.jpg",
+        "author": "N. Gregory Mankiw",
+        "rating": "4.09",
+        "price": "22"
+    }
+
+]
