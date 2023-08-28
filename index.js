@@ -22,6 +22,7 @@ async function run() {
   try {
     const booksCategory = client.db('BookTown').collection('BooksCategory');
     const booksDetails = client.db('BookTown').collection('BooksDetails');
+    const addedBooks = client.db('BookTown').collection('AddedBooks');
     const contactDetails = client.db('BookTown').collection('ContactDetails');
 
     app.get('/books-category', async (req, res) => {
@@ -59,6 +60,19 @@ async function run() {
         console.error("Error searching items:", error);
         res.status(500).json({ error: "Something went wrong" });
       }
+    });
+
+    app.get("/my-books", async(req, res) => {
+      const query = {};
+      const cursor = addedBooks.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.post("/add-book", async(req, res) => {
+      const bookInfo = req.body;
+      const info = await addedBooks.insertOne(bookInfo);
+      res.send(info);
     });
 
     app.post("/contact-info", async(req, res) => {
