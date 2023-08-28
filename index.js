@@ -22,6 +22,7 @@ async function run() {
   try {
     const booksCategory = client.db('BookTown').collection('BooksCategory');
     const booksDetails = client.db('BookTown').collection('BooksDetails');
+    const contactDetails = client.db('BookTown').collection('ContactDetails');
 
     app.get('/books-category', async (req, res) => {
       const query = {};
@@ -41,13 +42,30 @@ async function run() {
       const books = await cursor.toArray();
       res.send(books);
     });
-    app.get('/books-details/:id', async (req, res) => {
+    app.get('/book-details/:id', async (req, res) => {
       const id = req.params.id;
       const query = { '_id': new ObjectId(id) };
       const bookDetails = await booksDetails.findOne(query);
       res.send(bookDetails);
     });
 
+    app.get("/search", async (req, res) => {
+      try {
+        const query = req.query.name;
+        const regexQuery = { $regex: new RegExp(query, "i") };
+        const items = await booksDetails.find({ $or: [{ name: regexQuery }, { description: regexQuery }] }).toArray();
+        res.json(items);
+      } catch (error) {
+        console.error("Error searching items:", error);
+        res.status(500).json({ error: "Something went wrong" });
+      }
+    });
+
+    app.post("/contact-info", async(req, res) => {
+      const info = req.body;
+      const details = await contactDetails.insertOne(info);
+      res.send(details);
+    });
   }
   finally { }
 }
