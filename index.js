@@ -22,7 +22,7 @@ async function run() {
   try {
     const booksCategory = client.db('BookTown').collection('BooksCategory');
     const booksDetails = client.db('BookTown').collection('BooksDetails');
-    const addedBooks = client.db('BookTown').collection('AddedBooks');
+    const userAddedBooks = client.db('BookTown').collection('AddedBooks');
     const contactDetails = client.db('BookTown').collection('ContactDetails');
 
     app.get('/books-category', async (req, res) => {
@@ -62,27 +62,36 @@ async function run() {
       }
     });
 
-    app.get("/my-books", async(req, res) => {
-      const query = {};
-      const cursor = addedBooks.find(query);
+// .................................... //
+
+    app.get("/my-books", async (req, res) => {
+      let query = {};
+      if (req.query?.email) {
+        query = {
+          email: req.query.email
+        }
+      }
+      const cursor = userAddedBooks.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
 
-    app.post("/add-book", async(req, res) => {
+    app.post("/add-book", async (req, res) => {
       const bookInfo = req.body;
-      const info = await addedBooks.insertOne(bookInfo);
+      const info = await userAddedBooks.insertOne(bookInfo);
       res.send(info);
     });
 
-    app.delete("/delete-book/:id", async(req, res) => {
+    app.delete("/delete-book/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)};
-      const result = await addedBooks.deleteOne(query);
+      const query = { _id: new ObjectId(id) };
+      const result = await userAddedBooks.deleteOne(query);
       res.send(result);
     });
 
-    app.post("/contact-info", async(req, res) => {
+// .................................... //
+
+    app.post("/contact-info", async (req, res) => {
       const info = req.body;
       const details = await contactDetails.insertOne(info);
       res.send(details);
