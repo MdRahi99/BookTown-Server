@@ -121,6 +121,27 @@ async function run() {
       res.send(info);
     });
 
+    app.put("/update-book/:id", async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = {upsert: true};
+      const updatedBook = req.body;
+      const bookInfo = {
+        $set: {
+          email: updatedBook.email, 
+          img: updatedBook.img, 
+          name: updatedBook.name, 
+          author: updatedBook.author, 
+          rating: updatedBook.rating, 
+          price: updatedBook.price, 
+          desc: updatedBook.desc
+        }
+      };
+
+      const result = await userAddedBooks.updateOne(filter, bookInfo, options);
+      res.send(result);
+    });
+
     app.delete("/delete-book/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
