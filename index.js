@@ -67,7 +67,12 @@ async function run() {
     });
     app.get('/books-details', async (req, res) => {
       const sort = req.query.sort;
-      const query = {};
+      const search = req.query.search;
+      const query = {
+        name: {$regex: search, $options: 'i'}
+      };
+      // const query = {};
+      // const query = {price: {$gt: 21, $lte: 30}};
       const options = {
         sort: {
           "price": sort === 'asc' ? 1 : -1
