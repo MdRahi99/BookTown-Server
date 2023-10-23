@@ -41,6 +41,7 @@ async function run() {
     const booksDetails = client.db('BookTown').collection('BooksDetails');
     const userAddedBooks = client.db('BookTown').collection('AddedBooks');
     const contactDetails = client.db('BookTown').collection('ContactDetails');
+    const cartCollection = client.db('BookTown').collection('CartCollection');
 
     // /////////////// JWT ////////////////
     app.post('/jwt', (req, res) => {
@@ -101,7 +102,7 @@ async function run() {
       }
     });
 
-    // .................................... //
+    // ...............User Dashboard............ //
 
     app.get("/my-books", verifyJWT, async (req, res) => {
       const decoded = req.decoded;
@@ -160,7 +161,25 @@ async function run() {
       res.send(result);
     });
 
-    // .................................... //
+     // ...............User Dashboard............ //
+
+    // ..............User Cart............ //
+    app.get('/carts', async(req, res) => {
+      const email = req.query.email;
+      if(!email){
+        res.send([])
+      }
+      const query = {email : email};
+      const result = await cartCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.post('/carts', async(req, res) => {
+      const item = req.body;
+      const result = await cartCollection.insertOne(item);
+      res.send(result)
+    });
+    // ..............User Cart............ //
 
     app.post("/contact-info", async (req, res) => {
       const info = req.body;
