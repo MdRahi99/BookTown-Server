@@ -55,20 +55,39 @@ async function run() {
     // /////////////// JWT ////////////////
 
     // ...............Users............ //
-    app.get('/users', async(req, res) => {
+    app.get('/users', async (req, res) => {
       const query = {};
       const result = await usersList.find(query).toArray();
       res.send(result);
     });
 
-    app.post('/users', async(req, res) => {
+    app.post('/users', async (req, res) => {
       const user = req.body;
-      const query = {email: user.email};
+      const query = { email: user.email };
       const existingUser = await usersList.findOne(query);
-      if(existingUser){
-        return res.send({message: 'user already exists'})
+      if (existingUser) {
+        return res.send({ message: 'user already exists' })
       }
       const result = await usersList.insertOne(user);
+      res.send(result);
+    });
+
+    app.patch('/users/admin/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          role: 'admin'
+        }
+      }
+      const result = await usersList.updateOne(query, updatedDoc);
+      res.send(result);
+    });
+    
+    app.delete('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await usersList.deleteOne(query);
       res.send(result);
     });
     // ...............Users............ //
