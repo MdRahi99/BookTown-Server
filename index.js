@@ -37,11 +37,12 @@ const verifyJWT = (req, res, next) => {
 
 async function run() {
   try {
+    const usersList = client.db('BookTown').collection('UsersList');
     const booksCategory = client.db('BookTown').collection('BooksCategory');
     const booksDetails = client.db('BookTown').collection('BooksDetails');
     const userAddedBooks = client.db('BookTown').collection('AddedBooks');
-    const contactDetails = client.db('BookTown').collection('ContactDetails');
     const cartCollection = client.db('BookTown').collection('CartCollection');
+    const contactDetails = client.db('BookTown').collection('ContactDetails');
 
     // /////////////// JWT ////////////////
     app.post('/jwt', (req, res) => {
@@ -53,7 +54,26 @@ async function run() {
     });
     // /////////////// JWT ////////////////
 
+    // ...............Users............ //
+    app.get('/users', async(req, res) => {
+      const query = {};
+      const result = await usersList.find(query).toArray();
+      res.send(result);
+    });
 
+    app.post('/users', async(req, res) => {
+      const user = req.body;
+      const query = {email: user.email};
+      const existingUser = await usersList.findOne(query);
+      if(existingUser){
+        return res.send({message: 'user already exists'})
+      }
+      const result = await usersList.insertOne(user);
+      res.send(result);
+    });
+    // ...............Users............ //
+
+    // ...............Books............ //
     app.get('/books-category', async (req, res) => {
       const query = {};
       const cursor = booksCategory.find(query);
@@ -101,8 +121,9 @@ async function run() {
         res.status(500).json({ error: "Something went wrong" });
       }
     });
+    // ...............Books............ //
 
-    // ...............User Dashboard............ //
+    // ...............User Books............ //
 
     app.get("/my-books", verifyJWT, async (req, res) => {
       const decoded = req.decoded;
@@ -160,7 +181,7 @@ async function run() {
       const result = await userAddedBooks.deleteOne(query);
       res.send(result);
     });
-    // ...............User Dashboard............ //
+    // ...............User Books............ //
 
     // ..............User Cart............ //
     app.get('/carts', async (req, res) => {
