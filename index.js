@@ -72,6 +72,17 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/users/admin/:email', verifyJWT, async (req, res) => {
+      const email = req.params.email;
+      if (req.decoded.email != email) {
+        return res.status(403).send({ error: 1, message: 'forbidden access' })
+      }
+      const query = { email: email };
+      const user = await usersList.findOne(query);
+      const result = {admin: user?.role==='admin'}
+      res.send(result);
+    });
+
     app.patch('/users/admin/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
