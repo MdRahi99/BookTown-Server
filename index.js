@@ -67,7 +67,7 @@ async function run() {
     // /////////////// Verify Admin ////////////////
 
     // ...............Users............ //
-    app.get('/users', verifyJWT, verifyAdmin, async (req, res) => {
+    app.get('/users', verifyJWT, async (req, res) => {
       const query = {};
       const result = await usersList.find(query).toArray();
       res.send(result);
