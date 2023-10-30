@@ -83,7 +83,7 @@ async function run() {
       const result = await usersList.updateOne(query, updatedDoc);
       res.send(result);
     });
-    
+
     app.delete('/users/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -203,8 +203,12 @@ async function run() {
     // ...............User Books............ //
 
     // ..............User Cart............ //
-    app.get('/carts', async (req, res) => {
+    app.get('/carts', verifyJWT, async (req, res) => {
       const email = req.query.email;
+      const decoded = req.decoded;
+      if (decoded.email != email) {
+        return res.status(403).send({ error: 1, message: 'forbidden access' })
+      }
       if (!email) {
         res.send([])
       }
