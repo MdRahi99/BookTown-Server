@@ -54,8 +54,20 @@ async function run() {
     });
     // /////////////// JWT ////////////////
 
+    // /////////////// Verify Admin ////////////////
+    const verifyAdmin = (req, res, next) => {
+      const email = req.decoded.email;
+      const query = {email: email};
+      const user = usersList.findOne(query);
+      if (user.role != 'admin') {
+        return res.status(403).send({ error: true, message: 'forbidden access' })
+      }
+      next();
+    };
+    // /////////////// Verify Admin ////////////////
+
     // ...............Users............ //
-    app.get('/users', async (req, res) => {
+    app.get('/users', verifyJWT, verifyAdmin, async (req, res) => {
       const query = {};
       const result = await usersList.find(query).toArray();
       res.send(result);
