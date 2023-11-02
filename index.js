@@ -59,7 +59,7 @@ async function run() {
       const email = req.decoded.email;
       const query = {email: email};
       const user = await usersList.findOne(query);
-      if (user.role != 'admin') {
+      if (user?.role !== 'admin') {
         return res.status(403).send({ error: true, message: 'forbidden access' })
       }
       next();
@@ -86,8 +86,8 @@ async function run() {
 
     app.get('/users/admin/:email', verifyJWT, async (req, res) => {
       const email = req.params.email;
-      if (req.decoded.email != email) {
-        return res.status(403).send({ error: 1, message: 'forbidden access' })
+      if (req.decoded.email !== email) {
+         res.send({ admin: false })
       }
       const query = { email: email };
       const user = await usersList.findOne(query);
@@ -235,7 +235,7 @@ async function run() {
 
       const decodedEmail = req.decoded.email;
       if (email !== decodedEmail) {
-        return res.status(403).send({ error: 1, message: 'forbidden access' })
+        return res.status(403).send({ error: true, message: 'forbidden access' })
       }
       
       const query = { email: email };
