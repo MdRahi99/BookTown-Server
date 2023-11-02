@@ -6,7 +6,9 @@ const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require("dotenv").config();
 
-app.use(cors());
+app.use(cors({ 
+  origin: ['http://localhost:3000', 'https://book-town-server.vercel.app']
+}));
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.nxhpsct.mongodb.net/?retryWrites=true&w=majority`;
