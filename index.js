@@ -190,7 +190,7 @@ async function run() {
       res.send(result);
     });
 
-    app.post("/add-book", async (req, res) => {
+    app.post("/add-book", verifyJWT, async (req, res) => {
       const bookInfo = req.body;
       const info = await userAddedBooks.insertOne(bookInfo);
       res.send(info);
