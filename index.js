@@ -271,7 +271,7 @@ async function run() {
       res.send(info);
     });
 
-    app.put("/update-admin-book/:id", async (req, res) => {
+    app.put("/update-admin-book/:id", verifyJWT, verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
