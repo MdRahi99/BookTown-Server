@@ -55,9 +55,9 @@ async function run() {
     // /////////////// JWT ////////////////
 
     // /////////////// Verify Admin ////////////////
-    const verifyAdmin = async(req, res, next) => {
+    const verifyAdmin = async (req, res, next) => {
       const email = req.decoded.email;
-      const query = {email: email};
+      const query = { email: email };
       const user = await usersList.findOne(query);
       if (user?.role !== 'admin') {
         return res.status(403).send({ error: true, message: 'forbidden access' })
@@ -87,11 +87,11 @@ async function run() {
     app.get('/users/admin/:email', verifyJWT, async (req, res) => {
       const email = req.params.email;
       if (req.decoded.email !== email) {
-         res.send({ admin: false })
+        res.send({ admin: false })
       }
       const query = { email: email };
       const user = await usersList.findOne(query);
-      const result = {admin: user?.role==='admin'}
+      const result = { admin: user?.role === 'admin' }
       res.send(result);
     });
 
@@ -237,7 +237,7 @@ async function run() {
       if (email !== decodedEmail) {
         return res.status(403).send({ error: true, message: 'forbidden access' })
       }
-      
+
       const query = { email: email };
       const result = await cartCollection.find(query).toArray();
       res.send(result);
@@ -263,6 +263,14 @@ async function run() {
       res.send(result);
     });
     // ..............User Cart............ //
+
+    // ...............Admin Books............ //
+    app.post("/add-admin-book", verifyJWT, verifyAdmin, async (req, res) => {
+      const bookInfo = req.body;
+      const info = await booksDetails.insertOne(bookInfo);
+      res.send(info);
+    });
+    // ...............Admin Books............ //
 
     app.post("/contact-info", async (req, res) => {
       const info = req.body;
