@@ -270,6 +270,13 @@ async function run() {
       const info = await booksDetails.insertOne(bookInfo);
       res.send(info);
     });
+
+    app.delete("/delete-admin-book/:id", verifyJWT, verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await booksDetails.deleteOne(query);
+      res.send(result);
+    });
     // ...............Admin Books............ //
 
     app.post("/contact-info", async (req, res) => {
