@@ -3,9 +3,8 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const app = express();
 const port = process.env.PORT || 5000;
-const stripe = require('stripe')(process.env.PAYMENT_SECURE_KEY);
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require("dotenv").config();
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 app.use(cors());
 app.use(express.json());
@@ -264,29 +263,6 @@ async function run() {
       const result = await cartCollection.deleteOne(query);
       res.send(result);
     });
-
-    app.post('/create-payment-intent', async (req, res) => {
-      const { price } = req.body;
-      const amount = parseInt(price * 100);
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount,
-        currency: 'usd',
-        payment_method_types: ['card']
-      });
-
-      res.send({
-        clientSecret: paymentIntent.client_secret
-      })
-    });
-
-    app.post('/payments', verifyJWT, async (req, res) => {
-      const payment = req.body;
-      const insertResult = await paymentCollection.insertOne(payment);
-
-      const query = { _id: { $in: payment.cartItems.map(id => new ObjectId(id)) } }
-      const deleteResult = await cartCollection.deleteMany(query)
-      res.send({ insertResult, deleteResult });
-    })
     // ..............User Cart............ //
 
     // ...............Admin Books............ //
