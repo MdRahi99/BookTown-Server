@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const stripe = require('stripe')(process.env.PAYMENT_SECURE_KEY);
 const app = express();
 const port = process.env.PORT || 5000;
+const stripe = require('stripe')(process.env.PAYMENT_SECURE_KEY);
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require("dotenv").config();
 
@@ -264,8 +264,8 @@ async function run() {
       res.send(result);
     });
 
-    app.post("/create-payment-intent", verifyJWT, async(req, res) => {
-      const {price} = req.body;
+    app.post('/create-payment-intent', verifyJWT, async (req, res) => {
+      const { price } = req.body;
       const amount = parseInt(price * 100);
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount,
@@ -276,7 +276,7 @@ async function run() {
       res.send({
         clientSecret: paymentIntent.client_secret
       })
-    });
+    })
     // ..............User Cart............ //
 
     // ...............Admin Books............ //
