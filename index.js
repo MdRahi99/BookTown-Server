@@ -130,7 +130,7 @@ async function run() {
     });
     app.get('/books-details', async (req, res) => {
       const sort = req.query.sort;
-      const search = req.query.search;
+      const search = String(req.query.search);
       const query = {
         name: { $regex: search, $options: 'i' }
       };
@@ -155,8 +155,7 @@ async function run() {
     app.get("/search", async (req, res) => {
       try {
         const query = req.query.name;
-        // const regexQuery = { $regex: new RegExp(query, "i") };
-        const regexQuery = new RegExp(query, "i");
+        const regexQuery = { $regex: new RegExp(query, "i") };
         const items = await booksDetails.find({ $or: [{ name: regexQuery }, { description: regexQuery }] }).toArray();
         res.json(items);
       } catch (error) {
