@@ -17,6 +17,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^5.5.0",
+    "stripe": "^14.3.0",
     "vercel": "^30.0.0"
   }
 }
