@@ -155,7 +155,8 @@ async function run() {
     app.get("/search", async (req, res) => {
       try {
         const query = req.query.name;
-        const regexQuery = { $regex: new RegExp(query, "i") };
+        // const regexQuery = { $regex: new RegExp(query, "i") };
+        const regexQuery = new RegExp(query, "i");
         const items = await booksDetails.find({ $or: [{ name: regexQuery }, { description: regexQuery }] }).toArray();
         res.json(items);
       } catch (error) {
