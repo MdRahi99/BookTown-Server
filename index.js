@@ -278,10 +278,10 @@ async function run() {
         total_amount: orderedService.price,
         currency: order.currency,
         tran_id: transactionId, // use unique tran_id for each api call
-        success_url: 'http://localhost:3030/success',
-        fail_url: 'http://localhost:3030/fail',
-        cancel_url: 'http://localhost:3030/cancel',
-        ipn_url: 'http://localhost:3030/ipn',
+        success_url: `https://book-town-server-vo6a6ocu7-mdrahi99.vercel.app/payment/success?transactionId=${transactionId}`,
+        fail_url: 'https://book-town-server-vo6a6ocu7-mdrahi99.vercel.app/payment/fail',
+        cancel_url: 'https://book-town-server-vo6a6ocu7-mdrahi99.vercel.app/payment/cancel',
+        ipn_url: 'https://book-town-server-vo6a6ocu7-mdrahi99.vercel.app/ipn',
         shipping_method: 'Courier',
         product_name: order.name,
         product_category: order.category,
@@ -317,6 +317,14 @@ async function run() {
         })
         res.send({url: GatewayPageURL})
       });
+    });
+
+    app.post('/payment/success', async(req, res) => {
+      console.log('Success');
+      const {transactionId} = req.query;
+      const result = await paymentCollection.updateOne({transactionId}, {$set: {paid:true, paidAt: new Date()}});
+      if(result.modifiedCount > 0)
+      res.redirect(`http://localhost:3000/payment/success?transactionId=${transactionId}`);
     });
     // ..............User Cart............ //
 
