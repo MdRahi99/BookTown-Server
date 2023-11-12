@@ -269,7 +269,7 @@ async function run() {
       res.send(result);
     });
 
-    app.post('/payment-info', async (req, res) => {
+    app.post('/payment-info', verifyJWT, async (req, res) => {
       const order = req.body;
       const orderedService = await cartCollection.findOne({_id: new ObjectId(order.product)});
 
