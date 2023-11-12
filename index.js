@@ -324,7 +324,7 @@ async function run() {
       const { transactionId } = req.query;
       const result = await paymentCollection.updateOne({ transactionId }, { $set: { paid: true, paidAt: new Date() } });
       if (result.modifiedCount > 0) {
-        res.redirect(`http://localhost:3000/payment/success?transactionId=${transactionId}`);
+        res.redirect(`http://localhost:3000/dashboard/payment/success?transactionId=${transactionId}`);
       }
     });
     // ..............User Cart............ //
