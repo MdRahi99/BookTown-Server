@@ -271,7 +271,7 @@ async function run() {
 
     app.post('/payment-info', verifyJWT, async (req, res) => {
       const order = req.body;
-      const orderedService = await cartCollection.findOne({_id: new ObjectId(order.product)});
+      const orderedService = await cartCollection.findOne({ _id: new ObjectId(order.product) });
       const transactionId = new ObjectId().toString();
 
       const data = {
@@ -304,7 +304,7 @@ async function run() {
         ship_postcode: order.postcode,
         ship_country: 'Bangladesh',
       };
-      
+
       const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live)
       sslcz.init(data).then(apiResponse => {
         // Redirect the user to payment gateway
@@ -315,16 +315,17 @@ async function run() {
           transactionId,
           paid: false
         })
-        res.send({url: GatewayPageURL})
+        res.send({ url: GatewayPageURL })
       });
     });
 
-    app.post('/payment/success', async(req, res) => {
+    app.post('/payment/success', async (req, res) => {
       console.log('Success');
-      const {transactionId} = req.query;
-      const result = await paymentCollection.updateOne({transactionId}, {$set: {paid:true, paidAt: new Date()}});
-      if(result.modifiedCount > 0)
-      res.redirect(`http://localhost:3000/payment/success?transactionId=${transactionId}`);
+      const { transactionId } = req.query;
+      const result = await paymentCollection.updateOne({ transactionId }, { $set: { paid: true, paidAt: new Date() } });
+      if (result.modifiedCount > 0) {
+        res.redirect(`http://localhost:3000/payment/success?transactionId=${transactionId}`);
+      }
     });
     // ..............User Cart............ //
 
