@@ -327,6 +327,12 @@ async function run() {
         res.redirect(`http://localhost:3000/dashboard/payment/success?transactionId=${transactionId}`);
       }
     });
+
+    app.get('/orders/by-transaction-id/:id', async(req, res)=>{
+      const {id} = req.params;
+      const order = await paymentCollection.findOne({ transactionId: id });
+      res.send(order)
+    });
     // ..............User Cart............ //
 
     // ...............Admin Books............ //
