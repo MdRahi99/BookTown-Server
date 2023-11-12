@@ -272,11 +272,12 @@ async function run() {
     app.post('/payment-info', verifyJWT, async (req, res) => {
       const order = req.body;
       const orderedService = await cartCollection.findOne({_id: new ObjectId(order.product)});
+      const transactionId = new ObjectId().toString();
 
       const data = {
         total_amount: orderedService.price,
         currency: order.currency,
-        tran_id: new ObjectId().toString(), // use unique tran_id for each api call
+        tran_id: transactionId, // use unique tran_id for each api call
         success_url: 'http://localhost:3030/success',
         fail_url: 'http://localhost:3030/fail',
         cancel_url: 'http://localhost:3030/cancel',
@@ -307,7 +308,13 @@ async function run() {
       const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live)
       sslcz.init(data).then(apiResponse => {
         // Redirect the user to payment gateway
-        let GatewayPageURL = apiResponse.GatewayPageURL
+        let GatewayPageURL = apiResponse.GatewayPageURL;
+        paymentCollection.insertOne({
+          ...order,
+          price: orderedService.price,
+          transactionId,
+          paid: false
+        })
         res.send({url: GatewayPageURL})
       });
     });
