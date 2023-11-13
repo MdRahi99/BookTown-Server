@@ -322,6 +322,9 @@ async function run() {
     app.post('/payment/success', async (req, res) => {
       console.log('Success');
       const { transactionId } = req.query;
+      if (!transactionId) {
+        return res.redirect('http://localhost:3000/dashboard/payment/fail');
+      }
       const result = await paymentCollection.updateOne({ transactionId }, { $set: { paid: true, paidAt: new Date() } });
       if (result.modifiedCount > 0) {
         res.redirect(`http://localhost:3000/dashboard/payment/success?transactionId=${transactionId}`);
@@ -331,14 +334,17 @@ async function run() {
     app.post('/payment/fail', async (req, res) => {
       console.log('Fail');
       const { transactionId } = req.query;
+      if (!transactionId) {
+        return res.redirect('http://localhost:3000/dashboard/payment/fail');
+      }
       const result = await paymentCollection.deleteOne({ transactionId });
       if (result.deletedCount) {
         res.redirect('http://localhost:3000/dashboard/payment/fail');
       }
     });
 
-    app.get('/orders/by-transaction-id/:id', async(req, res)=>{
-      const {id} = req.params;
+    app.get('/orders/by-transaction-id/:id', async (req, res) => {
+      const { id } = req.params;
       const order = await paymentCollection.findOne({ transactionId: id });
       res.send(order)
     });
