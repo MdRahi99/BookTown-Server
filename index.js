@@ -271,6 +271,10 @@ async function run() {
 
     app.post('/payment-info', verifyJWT, async (req, res) => {
       const order = req.body;
+      const {currency, price, name, category, firstName, email, address, postcode} = order;
+      if(!currency || !price || !name || !category || !firstName || !email || !address || !postcode){
+        return res.send({error: "Please provide all information"})
+      }
       const orderedService = await cartCollection.findOne({ _id: new ObjectId(order.product) });
       const transactionId = new ObjectId().toString();
 
@@ -278,10 +282,10 @@ async function run() {
         total_amount: orderedService.price,
         currency: order.currency,
         tran_id: transactionId, // use unique tran_id for each api call
-        success_url: `http://localhost:5000/payment/success?transactionId=${transactionId}`,
-        fail_url: `http://localhost:5000/payment/fail?transactionId=${transactionId}`,
-        cancel_url: 'http://localhost:5000/payment/cancel',
-        ipn_url: 'http://localhost:5000/ipn',
+        success_url: `${process.env.SERVER_URL}/payment/success?transactionId=${transactionId}`,
+        fail_url: `${process.env.SERVER_URL}/payment/fail?transactionId=${transactionId}`,
+        cancel_url: `${process.env.SERVER_URL}/payment/cancel`,
+        ipn_url: `${process.env.SERVER_URL}/ipn`,
         shipping_method: 'Courier',
         product_name: order.name,
         product_category: order.category,
@@ -323,11 +327,11 @@ async function run() {
       console.log('Success');
       const { transactionId } = req.query;
       if (!transactionId) {
-        return res.redirect('http://localhost:3000/dashboard/payment/fail');
+        return res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/fail`);
       }
       const result = await paymentCollection.updateOne({ transactionId }, { $set: { paid: true, paidAt: new Date() } });
       if (result.modifiedCount > 0) {
-        res.redirect(`http://localhost:3000/dashboard/payment/success?transactionId=${transactionId}`);
+        res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/success?transactionId=${transactionId}`);
       }
     });
 
@@ -335,15 +339,15 @@ async function run() {
       console.log('Fail');
       const { transactionId } = req.query;
       if (!transactionId) {
-        return res.redirect('http://localhost:3000/dashboard/payment/fail');
+        return res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/fail`);
       }
       const result = await paymentCollection.deleteOne({ transactionId });
       if (result.deletedCount) {
-        res.redirect('http://localhost:3000/dashboard/payment/fail');
+        res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/fail`);
       }
     });
 
-    app.get('/orders/by-transaction-id/:id', async (req, res) => {
+    app.get('/orders/by-transaction-id/:id', verifyJWT, async (req, res) => {
       const { id } = req.params;
       const order = await paymentCollection.findOne({ transactionId: id });
       res.send(order)
