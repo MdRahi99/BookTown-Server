@@ -279,7 +279,7 @@ async function run() {
         currency: order.currency,
         tran_id: transactionId, // use unique tran_id for each api call
         success_url: `http://localhost:5000/payment/success?transactionId=${transactionId}`,
-        fail_url: 'http://localhost:5000/payment/fail',
+        fail_url: `http://localhost:5000/payment/fail?transactionId=${transactionId}`,
         cancel_url: 'http://localhost:5000/payment/cancel',
         ipn_url: 'http://localhost:5000/ipn',
         shipping_method: 'Courier',
@@ -332,7 +332,7 @@ async function run() {
       console.log('Fail');
       const { transactionId } = req.query;
       const result = await paymentCollection.deleteOne({ transactionId });
-      if (result.acknowledged) {
+      if (result.deletedCount) {
         res.redirect('http://localhost:3000/dashboard/payment/fail');
       }
     });
