@@ -332,7 +332,7 @@ async function run() {
       console.log('Fail');
       const { transactionId } = req.query;
       const result = await paymentCollection.deleteOne({ transactionId });
-      if (result.deletedCount > 0) {
+      if (result.deletedCount) {
         res.redirect('http://localhost:3000/dashboard/payment/fail');
       }
     });
