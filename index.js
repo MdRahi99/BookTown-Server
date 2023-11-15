@@ -72,7 +72,7 @@ async function run() {
     };
     // /////////////// Verify Admin ////////////////
 
-    // ...............Users............ //
+    // ...............Admin Users............ //
     app.get('/users', verifyJWT, verifyAdmin, async (req, res) => {
       const query = {};
       const result = await usersList.find(query).toArray();
@@ -119,7 +119,7 @@ async function run() {
       const result = await usersList.deleteOne(query);
       res.send(result);
     });
-    // ...............Users............ //
+    // ...............Admin Users............ //
 
     // ...............Books............ //
     app.get('/books-category', async (req, res) => {
@@ -271,9 +271,9 @@ async function run() {
 
     app.post('/payment-info', verifyJWT, async (req, res) => {
       const order = req.body;
-      const {currency, price, name, category, firstName, email, address, postcode} = order;
-      if(!currency || !price || !name || !category || !firstName || !email || !address || !postcode){
-        return res.send({error: "Please provide all information"})
+      const { currency, price, name, category, firstName, email, address, postcode } = order;
+      if (!currency || !price || !name || !category || !firstName || !email || !address || !postcode) {
+        return res.send({ error: "Please provide all information" })
       }
       const orderedService = await cartCollection.findOne({ _id: new ObjectId(order.product) });
       const transactionId = new ObjectId().toString();
@@ -389,6 +389,14 @@ async function run() {
       res.send(result);
     });
     // ...............Admin Books............ //
+
+    // ...............Admin Payments............ //
+    app.get('/all-payments', verifyJWT, verifyAdmin, async (req, res) => {
+      const query = {};
+      const result = await paymentCollection.find(query).toArray();
+      res.send(result);
+    });
+    // ...............Admin Payments............ //
 
     app.post("/contact-info", async (req, res) => {
       const info = req.body;
