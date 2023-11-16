@@ -410,12 +410,7 @@ async function run() {
 
       const updateResult = await cartCollection.updateOne(filter, paymentInfo, options);
       
-      if (updateResult.modifiedCount > 0) {
-        const deleteResult = await cartCollection.deleteOne(filter);
-        res.send({ updateResult, deleteResult });
-      } else {
-        res.status(404).send("Item not found or not updated");
-      }
+      res.send(updateResult);
     });
 
     app.delete("/delete-payment/:id", verifyJWT, verifyAdmin, async (req, res) => {
