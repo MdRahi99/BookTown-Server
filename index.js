@@ -397,6 +397,21 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/update-payment-status/:id", verifyJWT, verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      // const updatedPayment = req.body;
+      const paymentInfo = {
+        $set: {
+          paid: true
+        }
+      };
+
+      const result = await cartCollection.updateOne(filter, paymentInfo, options);
+      res.send(result);
+    });
+
     app.delete("/delete-payment/:id", verifyJWT, verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
