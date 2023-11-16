@@ -401,10 +401,10 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
-      const updatedPayment = req.body;
+      // const updatedPayment = req.body;
       const paymentInfo = {
         $set: {
-          paid: updatedPayment.paid
+          paid: true
         }
       };
 
