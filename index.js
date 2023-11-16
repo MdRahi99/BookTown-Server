@@ -269,13 +269,6 @@ async function run() {
       res.send(result);
     });
 
-    app.get('/payment-info/:id', verifyJWT, async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await paymentCollection.findOne(query);
-      res.send(result);
-    });
-
     app.get("/carts/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -409,22 +402,6 @@ async function run() {
       const query = {};
       const result = await paymentCollection.find(query).toArray();
       res.send(result);
-    });
-
-    app.put("/update-payment-status/:id", verifyJWT, verifyAdmin, async (req, res) => {
-      const id = req.params.id;
-      const filter = { _id: new ObjectId(id) };
-      const options = { upsert: true };
-      // const updatedPayment = req.body;
-      const paymentInfo = {
-        $set: {
-          paid: true
-        }
-      };
-
-      const updateResult = await cartCollection.updateOne(filter, paymentInfo, options);
-      
-      res.send(updateResult);
     });
 
     app.delete("/delete-payment/:id", verifyJWT, verifyAdmin, async (req, res) => {
