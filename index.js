@@ -269,6 +269,20 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/payment-info/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await paymentCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.get("/carts/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cartCollection.findOne(query);
+      res.send(result);
+    });
+
     app.post('/payment-info', verifyJWT, async (req, res) => {
       const order = req.body;
       const { currency, price, name, category, firstName, email, address, postcode } = order;
