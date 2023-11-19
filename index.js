@@ -271,24 +271,24 @@ async function run() {
 
     app.post('/payment-info', verifyJWT, async (req, res) => {
       const order = req.body;
-      const { currency, price, totalPrice, name, category, firstName, email, address, postcode } = order;
-      if (!currency || !price || !totalPrice || !name || !category || !firstName || !email || !address || !postcode) {
+      const { currency, totalPrice, products, firstName, email, address, postcode } = order;
+      if (!currency || !totalPrice || !products || !firstName || !email || !address || !postcode) {
         return res.send({ error: "Please provide all information" })
       }
-      const orderedService = await cartCollection.findOne({ _id: new ObjectId(order.product) });
+      // const orderedService = await cartCollection.findOne({ _id: new ObjectId(order.product) });
       const transactionId = new ObjectId().toString();
 
       const data = {
-        total_amount: order.totalPrice,
-        currency: order.currency,
+        total_amount: totalPrice,
+        currency: currency,
         tran_id: transactionId, // use unique tran_id for each api call
         success_url: `${process.env.SERVER_URL}/payment/success?transactionId=${transactionId}`,
         fail_url: `${process.env.SERVER_URL}/payment/fail?transactionId=${transactionId}`,
         cancel_url: `${process.env.SERVER_URL}/payment/cancel`,
         ipn_url: `${process.env.SERVER_URL}/ipn`,
         shipping_method: 'Courier',
-        product_name: order.name,
-        product_category: order.category,
+        product_name: 'Name',
+        product_category: 'Category',
         product_profile: 'general',
         cus_name: order.firstName,
         cus_email: order.email,
@@ -315,7 +315,6 @@ async function run() {
         let GatewayPageURL = apiResponse.GatewayPageURL;
         paymentCollection.insertOne({
           ...order,
-          price: orderedService.price,
           transactionId,
           paid: false
         })
@@ -331,7 +330,7 @@ async function run() {
       }
       const result = await paymentCollection.updateOne({ transactionId }, { $set: { paid: true, paidAt: new Date() } });
       if (result.modifiedCount > 0) {
-        res.redirect(`${process.env.CLIENT_URL}/dashboard/my-cart?transactionId=${transactionId}`);
+        res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/success?transactionId=${transactionId}`);
       }
     });
 
