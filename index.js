@@ -269,24 +269,17 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/carts/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await cartCollection.findOne(query);
-      res.send(result);
-    });
-
     app.post('/payment-info', verifyJWT, async (req, res) => {
       const order = req.body;
-      const { currency, price, name, category, firstName, email, address, postcode } = order;
-      if (!currency || !price || !name || !category || !firstName || !email || !address || !postcode) {
+      const { currency, price, totalPrice, name, category, firstName, email, address, postcode } = order;
+      if (!currency || !price || !totalPrice || !name || !category || !firstName || !email || !address || !postcode) {
         return res.send({ error: "Please provide all information" })
       }
       const orderedService = await cartCollection.findOne({ _id: new ObjectId(order.product) });
       const transactionId = new ObjectId().toString();
 
       const data = {
-        total_amount: orderedService.price,
+        total_amount: order.totalPrice,
         currency: order.currency,
         tran_id: transactionId, // use unique tran_id for each api call
         success_url: `${process.env.SERVER_URL}/payment/success?transactionId=${transactionId}`,
