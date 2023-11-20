@@ -292,7 +292,7 @@ async function run() {
         tran_id: transactionId, // use unique tran_id for each api call
         success_url: `${process.env.SERVER_URL}/payment/success?transactionId=${transactionId}`,
         fail_url: `${process.env.SERVER_URL}/payment/fail?transactionId=${transactionId}`,
-        cancel_url: `${process.env.SERVER_URL}/payment/cancel`,
+        cancel_url: `${process.env.SERVER_URL}/payment/cancel?transactionId=${transactionId}`,
         ipn_url: `${process.env.SERVER_URL}/ipn`,
         shipping_method: 'Courier',
         product_name: 'Name',
@@ -369,6 +369,18 @@ async function run() {
 
     app.post('/payment/fail', async (req, res) => {
       console.log('Fail');
+      const { transactionId } = req.query;
+      if (!transactionId) {
+        return res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/fail`);
+      }
+      const result = await paymentCollection.deleteOne({ transactionId });
+      if (result.deletedCount) {
+        res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/fail`);
+      }
+    });
+
+    app.post('/payment/cancel', async (req, res) => {
+      console.log('Cancel');
       const { transactionId } = req.query;
       if (!transactionId) {
         return res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/fail`);
