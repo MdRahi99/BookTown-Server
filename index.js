@@ -275,8 +275,9 @@ async function run() {
       if (!currency || !totalPrice || !products || !firstName || !email || !address || !postcode) {
         return res.send({ error: "Please provide all information" })
       }
-      // const orderedService = await cartCollection.findOne({ _id: new ObjectId(order.product) });
       const transactionId = new ObjectId().toString();
+
+      // const orderedService = await cartCollection.findOne({ _id: new ObjectId(order.product) });
 
       const data = {
         total_amount: totalPrice,
@@ -313,24 +314,49 @@ async function run() {
       sslcz.init(data).then(apiResponse => {
         // Redirect the user to payment gateway
         let GatewayPageURL = apiResponse.GatewayPageURL;
+
+        const query = { _id: { $in: products.map(id => new ObjectId(id._id)) } }
+
         paymentCollection.insertOne({
           ...order,
           transactionId,
           paid: false
         })
-        res.send({ url: GatewayPageURL })
-      });
+          .then(() => {
+            cartCollection.deleteMany(query)
+              .then(deleteResult => {
+                console.log(`Deleted ${deleteResult.deletedCount} cart items`);
+              })
+              .catch(error => {
+                console.error('Error deleting cart items:', error);
+              });
+
+            res.send({ url: GatewayPageURL });
+          })
+          .catch(error => {
+            console.error('Error inserting into paymentCollection:', error);
+            res.status(500).send({ error: 'Internal Server Error' });
+          });
+      })
     });
 
     app.post('/payment/success', async (req, res) => {
       console.log('Success');
       const { transactionId } = req.query;
+
       if (!transactionId) {
         return res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/fail`);
       }
-      const result = await paymentCollection.updateOne({ transactionId }, { $set: { paid: true, paidAt: new Date() } });
-      if (result.modifiedCount > 0) {
+
+      const paymentResult = await paymentCollection.updateOne(
+        { transactionId },
+        { $set: { paid: true, paidAt: new Date() } }
+      );
+
+      if (paymentResult.modifiedCount > 0) {
         res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/success?transactionId=${transactionId}`);
+      } else {
+        res.redirect(`${process.env.CLIENT_URL}/dashboard/payment/fail`);
       }
     });
 
