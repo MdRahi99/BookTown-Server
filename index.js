@@ -269,6 +269,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/payment-info/:email', verifyJWT, async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await paymentCollection.find(query).toArray();
+      res.send(result);
+    });
+
     app.post('/payment-info', verifyJWT, async (req, res) => {
       const order = req.body;
       const { currency, totalPrice, products, firstName, email, address, postcode } = order;
@@ -419,6 +426,20 @@ async function run() {
     app.get('/all-payments', verifyJWT, verifyAdmin, async (req, res) => {
       const query = {};
       const result = await paymentCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.put("/update-Order/:id", verifyJWT, verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const orderStatus = {
+        $set: {
+          status: true
+        }
+      };
+
+      const result = await paymentCollection.updateOne(query, orderStatus, options);
       res.send(result);
     });
 
