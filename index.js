@@ -451,6 +451,18 @@ async function run() {
     });
     // ...............Admin Payments............ //
 
+     // ...............Admin Stats............ //
+     app.get('/admin-stats', verifyJWT, verifyAdmin, async(req, res) => {
+      const users = await usersList.estimatedDocumentCount();
+      const products = await booksDetails.estimatedDocumentCount();
+      const orders = await paymentCollection.estimatedDocumentCount();
+      const payments = await paymentCollection.find().toArray();
+      const revenue = payments.reduce((sum, payment) => sum + payment.totalPrice, 0)
+
+      res.send({revenue, users, products, orders})
+     });
+     // ...............Admin Stats............ //
+
     app.post("/contact-info", async (req, res) => {
       const info = req.body;
       const details = await contactDetails.insertOne(info);
