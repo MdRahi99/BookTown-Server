@@ -426,6 +426,20 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/add-feature/:id", verifyJWT, verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const featuredItem = {
+        $set: {
+          featured: true
+        }
+      };
+
+      const result = await booksDetails.updateOne(query, featuredItem, options);
+      res.send(result);
+    });
+
     app.delete("/delete-admin-book/:id", verifyJWT, verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
